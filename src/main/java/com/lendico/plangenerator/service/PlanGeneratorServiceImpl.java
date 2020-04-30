@@ -2,7 +2,7 @@ package com.lendico.plangenerator.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.lendico.plangenerator.model.LoanInfoRequest;
 import com.lendico.plangenerator.model.Repayment;
+import com.lendico.plangenerator.util.Constants;
 import com.lendico.plangenerator.util.LoanCalculationUtil;
 
 @Service
@@ -37,7 +38,7 @@ public class PlanGeneratorServiceImpl implements PlanGeneratorService {
 		LOGGER.debug("rateOfInterestPercentage {} ", rateOfInterestPercentage);
 		BigDecimal initialOutstandingPrincipal = loanInfoRequest.getLoanAmount();
 
-		LocalDateTime startDate = LoanCalculationUtil.parseStartDate(loanInfoRequest.getStartDate());
+		LocalDate startDate = LoanCalculationUtil.parseStartDate(loanInfoRequest.getStartDate());
 
 		borrowerPaymentAmount = getAnnuityPayment(initialOutstandingPrincipal, monthlyRateOfInterest,
 				loanInfoRequest.getDuration());
@@ -54,7 +55,8 @@ public class PlanGeneratorServiceImpl implements PlanGeneratorService {
 			LOGGER.debug("emiPrincipal {} ", emiPrinciple);
 			remainingOutstandingPrincipal = initialOutstandingPrincipal.subtract(emiPrinciple);
 			Repayment repaymentPay = new Repayment(borrowerPaymentAmount, initialOutstandingPrincipal, interest,
-					emiPrinciple, remainingOutstandingPrincipal, startDate.toString());
+					emiPrinciple, remainingOutstandingPrincipal,
+					startDate.atStartOfDay().format(Constants.DATE_FORMAT));
 			repaymentList.add(repaymentPay);
 
 			if (remainingOutstandingPrincipal.compareTo(new BigDecimal(0)) > 0) {
@@ -67,8 +69,8 @@ public class PlanGeneratorServiceImpl implements PlanGeneratorService {
 	}
 
 	@Override
-	public LocalDateTime getNextRepaymentDate(LocalDateTime startDate) {
-		Function<LocalDateTime, LocalDateTime> nextRepaymentDate = LoanCalculationUtil::getNextRepaymentDate;
+	public LocalDate getNextRepaymentDate(LocalDate startDate) {
+		Function<LocalDate, LocalDate> nextRepaymentDate = LoanCalculationUtil::getNextRepaymentDate;
 		return nextRepaymentDate.apply(startDate);
 	}
 

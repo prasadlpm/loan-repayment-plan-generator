@@ -2,8 +2,7 @@ package com.lendico.plangenerator.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +14,8 @@ public final class LoanCalculationUtil {
 	private LoanCalculationUtil() {
 	}
 
-	public static LocalDateTime parseStartDate(String startDateString) {
-		DateTimeFormatter format = DateTimeFormatter.ofPattern(Constants.DATE_FORMATER);
-		LocalDateTime startDate = LocalDateTime.parse(startDateString, format);
+	public static LocalDate parseStartDate(String startDateString) {
+		LocalDate startDate = LocalDate.parse(startDateString, Constants.DATE_FORMAT);
 		return startDate;
 	}
 
@@ -36,7 +34,7 @@ public final class LoanCalculationUtil {
 		return annuityPayment;
 	}
 
-	public static LocalDateTime getNextRepaymentDate(LocalDateTime date) {
+	public static LocalDate getNextRepaymentDate(LocalDate date) {
 		date = date.plusMonths(1);
 		LOGGER.debug("getNextRepaymentDate {} ", date);
 		return date;

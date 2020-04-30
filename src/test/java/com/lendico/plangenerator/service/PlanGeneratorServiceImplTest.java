@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Test;
@@ -34,9 +34,9 @@ public class PlanGeneratorServiceImplTest {
 	
 	@Test
 	public void testNextRepaymentDate() throws Exception {
-		LocalDateTime startDate = LoanCalculationUtil.parseStartDate("2018-01-01T00:00:00Z");
-		LocalDateTime expectedDate = LoanCalculationUtil.parseStartDate("2018-02-01T00:00:00Z");
-		LocalDateTime actualDate = planGeneratorService.getNextRepaymentDate(startDate);
+		LocalDate startDate = LoanCalculationUtil.parseStartDate("2018-01-01T00:00:00Z");
+		LocalDate expectedDate = LoanCalculationUtil.parseStartDate("2018-02-01T00:00:00Z");
+		LocalDate actualDate = planGeneratorService.getNextRepaymentDate(startDate);
 		assertThat(expectedDate).isEqualTo(actualDate);
 	}
 
